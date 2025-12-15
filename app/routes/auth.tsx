@@ -1,19 +1,30 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { usePuterStore } from '~/lib/puter';
+import {useLocation, useNavigate} from "react-router";
 export const meta = () => ([
   {title : 'AyushMind | Auth'},
   {name:"Description",content:"Log Into Your Account"},
 ])
 
 const Auth = () => {
-  const { isLoading, auth } = usePuterStore();
+  const { isLoading, auth, init } = usePuterStore();
+  const location = useLocation();
+  const next = location.search.split('next=')[1];
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    init();
+  }, [init])
+  useEffect(() => {
+    if(auth.isAuthenticated) navigate(next);
+  }, [auth.isAuthenticated, next])
   return (
     <main className="bg-[url('/images/bg-auth.svg')] bg-cover min-h-screen flex items-center justify-center">
       <div className="gradient-border shadow-lg">
         <section className="flex  flex-col gap-8 bg-white rounded-2xl p-10">
           <div className="flex flex-col items-center gap-2 text-center">
             <h1>Welcome</h1>
-            <h2>Log in to continue the Ayush Journey</h2>
+            <h2>Log in to continue</h2>
           </div>
           <div>
             {isLoading ? (
